@@ -72,21 +72,19 @@ function EditPage(props) {
     const detailContent = location.state.content;
     const detailUserId = location.state.id;
 
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    
-    function test(value) {
-        console.log(JSON.stringify(value), title, props.title);
-      }
+    const [title, setTitle] = useState(detailTitle);
+    const [content, setContent] = useState(detailContent);
+
+    const id = location.state.id;
     const navigate = useNavigate();
-    const MoveTestMain = () => {
-        navigate('/testmain');
+    const Movemain = () => {
+        navigate('/main');
     }
 
     const Edit = async () => {
         const EditPost = await axios({
-            method: "post",
-            url: "http://127.0.0.1:8080/edit",
+            method: "patch",
+            url: `http://127.0.0.1:8080/post/update?id=${id}`,
             data: {
                 id: detailUserId,
                 title: title,
@@ -94,10 +92,35 @@ function EditPage(props) {
             },
             headers: {
                 "Content-Type": "application/json",
-                accessToken: localStorage.getItem("Token"),
+                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
             },
             });
+          if(EditPost.data.message == 'update success') {
+            alert('업데이트 하였습니다.')
+            navigate(`/main`)
+          }
     }
+
+    const Delete = async () => {
+      try{
+          const postDelete = await axios({
+              method: 'delete',
+              url: `http://localhost:8080/post/delete?id=${id}`,
+              headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              },
+          })
+          if(postDelete.status == 204) {
+            alert('삭제되었습니다.')
+            navigate('/main');
+          }
+      } catch(err) {
+          if(err.response.data.message == 'not this post writer') {
+              alert('게시글 작성자만 삭제 할 수 있습니다.')
+          }
+      }
+  }
 
     return (
         <>
@@ -150,9 +173,9 @@ function EditPage(props) {
       <Grid item xs={6}>
         <Box sx={{ display: 'flex',
           flexDirection: 'row-reverse'}}>
-        <Button variant="contained">수정</Button>
+        <Button variant="contained" onClick={() => Edit()}>수정</Button>
         &nbsp;&nbsp;
-        <Button variant="out-lined" onClick={() => MoveTestMain()}>삭제</Button>
+        <Button variant="out-lined" onClick={() => Delete()}>삭제</Button>
         </Box>
       </Grid>
       <Grid item xs={3}>
@@ -188,7 +211,7 @@ function EditPage(props) {
             </div>
             <Box>
             <Button variant="contained" onClick={() => test()}>등록</Button>
-                <Button variant="out-lined" onClick={() => MoveTestMain()}>취소</Button>
+                <Button variant="out-lined" onClick={() => Movemain()}>취소</Button>
             </Box> */}
 
         </>

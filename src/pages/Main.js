@@ -30,17 +30,6 @@ function Content({ content }) {
 function MainPage() {
     const [PostList, setPostList] = useState('');
 
-    // const PostLists = async () => {
-    //   const getPostList = await axios({
-    //     method: "get",
-    //     url: "http://127.0.0.1:8080/main", {
-    //       headers: {
-    //         "Content-type": "application/json"
-    //       },
-    //   });
-    //   const List = result.data[0]
-    // }
-
     const navigate = useNavigate();
 
     const MoveSignin = () => {

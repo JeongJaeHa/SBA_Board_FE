@@ -17,33 +17,35 @@ import {
 import Button from '@mui/material/Button';
 import { Box, Grid, ListItem, Typography } from '@mui/material';
 
-const contents = [
-    {
-      date: '2023-01-01',
-      title: 'test title',
-      nickname: '불타는 금요일',
-      content: '월요일은 너무 힘든것 같아요'
-    },
-    {
-      date: '2023-01-01',
-      title: '테스트 타이틀',
-      nickname: '점심메뉴 추천좀'
-    },
-    {
-      date: '2023-01-01',
-      title: '네트워크 너무 어려워요 ㅠㅠ',
-      nickname: '통학전문가'
-    }
-  ];
-
 function WritePage() {
     const[ title, setTitle ] = useState('');
     const [content, setContent ] = useState('');
 
     const navigate = useNavigate();
-    const MoveTestMain = () => {
-        navigate('/testmain');
+    const Movemain = () => {
+        navigate('/main');
     }
+
+
+
+  const postRegister = async () => {
+    if(title.length > 0 & content.length > 0) {
+      const postregister = await axios({
+        method: "post",
+        url: "http://127.0.0.1:8080/post/register",
+        data: {
+          title: title,
+          content: content
+        },
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+        })
+        navigate('/main');
+    }
+  }
+    
 
     return (
         <>
@@ -95,9 +97,9 @@ function WritePage() {
       <Grid item xs={6}>
         <Box sx={{ display: 'flex',
           flexDirection: 'row-reverse'}}>
-        <Button variant="contained">등록</Button>
+        <Button variant="contained" onClick={() => postRegister()}>등록</Button>
         &nbsp;&nbsp;
-        <Button variant="out-lined" onClick={() => MoveTestMain()}>취소</Button>
+        <Button variant="out-lined" onClick={() => Movemain()}>취소</Button>
         </Box>
       </Grid>
       <Grid item xs={3}>
@@ -133,7 +135,7 @@ function WritePage() {
             <div>
                 <ButtonBox>
                 <Button variant="contained">등록</Button>
-                <Button variant="out-lined" onClick={() => MoveTestMain()}>삭제</Button>
+                <Button variant="out-lined" onClick={() => Movemain()}>삭제</Button>
                 </ButtonBox>
             </div> */}
         </>

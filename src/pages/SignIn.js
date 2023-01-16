@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
@@ -8,6 +8,7 @@ import axios from "axios";
 function SignInPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [ nickname, setNickname ] = useState([]);
     const [showPassword, setShowPassword] = React.useState(false);
 
     const navigate = useNavigate();
@@ -29,9 +30,10 @@ function SignInPage() {
     const SignIn = async () => {
         if(!email) return alert('이메일을 입력해주세요');
         if(!password) return alert('비밀번호를 입력해주세요');
+
         const SignIn = await axios({
             method: "post",
-            url: "http://127.0.0.1:8080/signin",
+            url: "http://127.0.0.1:8080/auth/login",
             data: {
                 email: email,
                 password: password
@@ -39,9 +41,21 @@ function SignInPage() {
             headers: {
                 "Content-Type": "application/json",
             },
-            });
+            })
+            .then((res) => {
+                if(res.data.message == 'login success') {
+                    localStorage.setItem("accessToken", res.data.accessToken);
+                    localStorage.setItem("nickname", res.data.nickname);
+                    alert(`환영합니다 ${res.data.nickname} 님`);
+                    navigate('/main')
+                }
+              })
+              .catch((err) => {
+                  if(err.response.data.message == '존재하지 않는 회원입니다') return alert('이메일을 확인해주세요')
+                  if(err.response.data.message == '비밀번호가 일치하지 않습니다.') return alert('비밀번호를 확인해주세요')
+              });
         };
-
+        
     return (
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -67,6 +81,7 @@ function SignInPage() {
                     required
                     id="outlined-required"
                     label="Password"
+                    type="password"
                     onChange={(e) => setPassword(e.target.value)}
                     />
                 </Box>
@@ -90,4 +105,4 @@ function SignInPage() {
 }
 
 
-export default SignInPage;
+export default SignInPage

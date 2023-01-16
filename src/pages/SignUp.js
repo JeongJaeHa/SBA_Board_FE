@@ -32,15 +32,23 @@ function SignUpPage() {
     };
 
     const SignUp = async () => {
+      const emailRegex = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
+      const nicknameRegex = new RegExp('^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$');
+      const passwordRegex = new RegExp('^[a-zA-Z0-9]{8,}$');
+      
       if(!email) return alert('이메일을 입력해주세요');
+      if( !emailRegex.test(email)) return alert('이메일을 형식을 확인하세요');
       if(!nickname) return alert('닉네임을 입력해주세요');
+      if( !nicknameRegex.test(nickname)) return alert('닉네임은 한글, 영문, 숫자로 2글자 이상 만들어주세요.');
       if(!password) return alert('비밀번호를 입력해주세요');
       if(!passwordConfirm) return alert('비밀번호 확인란을 입력하세요');
+      if(!passwordRegex.test(password)) return alert('비밀번호는 문자와 숫자 조합으로 8자 이상 만드세요')
       if(password !== passwordConfirm) return alert('비밀번호가 다릅니다.');
 
-      const SignUp = await axios({
+
+      const userSignUp = await axios({
         method: "post",
-        url: "http://127.0.0.1:8080/signup",
+        url: "http://127.0.0.1:8080/auth/register",
         data: {
             email: email,
             password: password,
@@ -48,7 +56,17 @@ function SignUpPage() {
         },
         headers: {
             "Content-Type": "application/json",
-        },
+        }
+        })
+        .then((res) => {
+          if(res.data.message == 'register success') {
+            alert('회원가입에 성공하였습니다.')
+            navigate('/main')
+          }
+        })
+        .catch((err) => {
+          if(err.response.data.message == '중복된 이메일 입니다.') return alert('중복된 이메일 입니다.')
+          if(err.response.data.message == '중복된 닉네임 입니다.') return alert('중복된 닉네임 입니다.')
         });
     }
 
