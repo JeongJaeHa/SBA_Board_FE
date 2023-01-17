@@ -7,7 +7,6 @@ import MainPage from './pages/MainPage';
 import WritePage from './pages/Write';
 import DetailPage from './pages/Detail';
 import EditPage from './pages/Edit';
-import GridTable from './pages/GridTable';
 import { Box } from '@mui/material';
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
         <Route path='/main?page=:page&offset=:offset' element={<MainPage />} />
         <Route path='/post' element={<DetailPage />} />
         <Route path='/edit' element={<EditPage />} />
-        <Route path='/gird' element={<GridTable />} />
       </Routes>   
     </BrowserRouter> 
     </>

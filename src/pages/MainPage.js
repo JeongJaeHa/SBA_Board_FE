@@ -8,6 +8,7 @@ import { Box, Grid, Link, List, ListItem, ListItemButton, Pagination, Typography
 import LoginIcon from '@mui/icons-material/Login';
 import axios from "axios";
 import dayjs from "dayjs";
+import {API} from '../config';
 
 function MainPage() {
   const [list, setList] = useState([]);
@@ -32,6 +33,7 @@ function MainPage() {
 
   const MoveMain = () => {
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('nickname');
     navigate('/main');
 }
 
@@ -72,7 +74,7 @@ useEffect(() => {
     const currentPage = 1;
     const offset = 10;
     const Page = async () => {
-      const page = await axios.get(`http://127.0.0.1:8080/post/list?page=${currentPage}&offset=${offset}`,{
+      const page = await axios.get(`${API.POST_LIST}?page=${currentPage}&offset=${offset}`,{
         headers: {
           "Content-Type": "application/json",
           "accessToken": localStorage.getItem("accessToken"),
@@ -84,7 +86,7 @@ useEffect(() => {
     Page(); 
   } else {
     const Page = async () => {
-      const page = await axios.get(`http://127.0.0.1:8080/post/list?page=${currentPage}&offset=${offset}`,{
+      const page = await axios.get(`${API.POST_LIST}?page=${currentPage}&offset=${offset}`,{
         headers: {
           "Content-Type": "application/json",
           "accessToken": localStorage.getItem("accessToken"),

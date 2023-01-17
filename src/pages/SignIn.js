@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, FormControl, Grid, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
 import { Box, ListItem } from '@material-ui/core';
 import axios from "axios";
+import {API} from '../config';
 
 function SignInPage() {
     const [email, setEmail] = useState('');
@@ -33,7 +34,7 @@ function SignInPage() {
 
         const SignIn = await axios({
             method: "post",
-            url: "http://127.0.0.1:8080/auth/login",
+            url: `${API.SIGN_IN}`,
             data: {
                 email: email,
                 password: password
@@ -49,11 +50,11 @@ function SignInPage() {
                     alert(`환영합니다 ${res.data.nickname} 님`);
                     navigate('/main')
                 }
-              })
-              .catch((err) => {
-                  if(err.response.data.message == '존재하지 않는 회원입니다') return alert('이메일을 확인해주세요')
-                  if(err.response.data.message == '비밀번호가 일치하지 않습니다.') return alert('비밀번호를 확인해주세요')
-              });
+                })
+                .catch((err) => {
+                    if(err.response.data.message == 'Email not exists') return alert('이메일을 확인해주세요')
+                    if(err.response.data.message == 'Unauthorized') return alert('비밀번호를 확인해주세요')
+                });
         };
         
     return (

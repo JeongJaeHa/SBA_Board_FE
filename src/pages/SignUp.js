@@ -6,6 +6,7 @@ import { Box, ListItem } from '@material-ui/core';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from "axios";
+import {API} from '../config';
 
 function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -48,7 +49,7 @@ function SignUpPage() {
 
       const userSignUp = await axios({
         method: "post",
-        url: "http://127.0.0.1:8080/auth/register",
+        url: `${API.SIGN_UP}`,
         data: {
             email: email,
             password: password,
@@ -65,8 +66,8 @@ function SignUpPage() {
           }
         })
         .catch((err) => {
-          if(err.response.data.message == '중복된 이메일 입니다.') return alert('중복된 이메일 입니다.')
-          if(err.response.data.message == '중복된 닉네임 입니다.') return alert('중복된 닉네임 입니다.')
+          if(err.response.data.message == 'email already registered') return alert('이미 사용중인 이메일 입니다.')
+          if(err.response.data.message == 'nickname already registered') return alert('이미 사용중인 닉네임 입니다.')
         });
     }
 

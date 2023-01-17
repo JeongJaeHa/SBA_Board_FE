@@ -16,55 +16,7 @@ import {
 import Button from '@mui/material/Button';
 import axios from "axios";
 import { Box, Grid, ListItem, Typography } from '@mui/material';
-
-const TitleBox = styled.div`
-width: 550px;
-height: 80px;
-align-items: center;
-display: flex;
-flex-direction: column;
-margin: 0 auto;
-margin-top: 20px;
-
-`
-
-const ContentBox = styled.div`
-width: 550px;
-height: 550px;
-align-items: center;
-display: flex;
-flex-direction: column;
-margin: 0 auto;
-`
-
-const ButtonBox = styled.div`
-width: 550px;
-align-items: center;
-display: flex;
-justify-content: space-between;
-flex-direction: row;
-margin: 0 auto;
-margin-top: 20px;
-`
-
-const contents = [
-    {
-    date: '2023-01-01',
-    title: 'test title',
-    nickname: '불타는 금요일',
-    content: '월요일은 너무 힘든것 같아요'
-    },
-    {
-    date: '2023-01-01',
-    title: '테스트 타이틀',
-    nickname: '점심메뉴 추천좀'
-    },
-    {
-    date: '2023-01-01',
-    title: '네트워크 너무 어려워요 ㅠㅠ',
-    nickname: '통학전문가'
-    }
-];
+import {API} from '../config'
 
 function EditPage(props) {
     const location = useLocation();
@@ -84,7 +36,7 @@ function EditPage(props) {
     const Edit = async () => {
         const EditPost = await axios({
             method: "patch",
-            url: `http://127.0.0.1:8080/post/update?id=${id}`,
+            url: `${API.POST_EDIT}${id}`,
             data: {
                 id: detailUserId,
                 title: title,
@@ -105,7 +57,7 @@ function EditPage(props) {
       try{
           const postDelete = await axios({
               method: 'delete',
-              url: `http://localhost:8080/post/delete?id=${id}`,
+              url: `${API.POST_DELETE}${id}`,
               headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

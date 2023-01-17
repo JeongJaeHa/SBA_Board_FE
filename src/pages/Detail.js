@@ -3,6 +3,7 @@ import React, { useEffect, useState } from'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from "axios";
+import {API} from '../config'
 
 function DetailPage() {
     const [post, setPost] = useState('');
@@ -20,7 +21,7 @@ function DetailPage() {
     const id = newArr.slice(4,).join('')
 
     useEffect(() => {
-        const detailPost = axios.get(`http://127.0.0.1:8080/post?id=${id}`)
+        const detailPost = axios.get(`${API.POST_DETAIL}${id}`)
         .then(response => {
             if(response.data.information.post.length == 0) {
                 alert('존재하지 않는 게시물 입니다.')
@@ -56,7 +57,7 @@ function DetailPage() {
         try{
             const postDelete = await axios({
                 method: 'delete',
-                url: `http://localhost:8080/post/delete?id=${id}`,
+                url: `${API.POST_DELETE}${id}`,
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -118,7 +119,7 @@ function DetailPage() {
                         <Box sx={{ width: '100%', display: 'column', justifyContent: 'center', flexWrap: 'wrap', borderBottom: 2, paddingRight: 0}}>
                         <ListItem title='title' sx={{ color: 'text.primary', fontSize: 30, paddingBottom: 0, paddingLeft: 0, paddingTop: 10}}>{title}</ListItem>
                         <ListItem sx={{ paddingTop: 2, paddingLeft: 0, paddingRight: 0}}>
-                        <ListItem sx={{ paddingTop: 0, paddingLeft: 0, paddingBottom: 0}}>{nickname} |  {createdAt} {createdAt.slice(11,16)}</ListItem>
+                        <ListItem sx={{ paddingTop: 0, paddingLeft: 0, paddingBottom: 0}}>{nickname} |  {createdAt.slice(0,10)} {createdAt.slice(11,16)}</ListItem>
                         <ListItem sx={{ flexDirection: 'row-reverse', paddingTop: 0, paddingBottom: 0, paddingRight: 0 }}></ListItem>
                         </ListItem>
                         </Box>
